@@ -1,17 +1,18 @@
 var fs = require('fs')
 var ipfsRoutes = require('./ipfs/ipfs-routes')
-var mainPage = require('./main-page')
+var qualityReportRoutes = require('./quality-reports/routes')
+
+var homePage = require('./home-page')
 var templateEngine = require('./template-engine')
 
 var routeCollection = []
 
-var mainPageRoute = {
+var homePageRoute = {
     path: '/',
-    name: 'main-page',    
-    handler: function (url, socket) {      
-      var data = { title: 'Policy Chain' }
-      var hbsPath = __dirname + '\\main-page.hbs'
-      templateEngine.getHTML(hbsPath, data, function (err, html) {                  
+    name: 'home-page',    
+    handler: function (url, socket) {            
+      var hbsPath = __dirname + '\\home-page.hbs'
+      templateEngine.getHTML(hbsPath, homePage.data, function (err, html) {                  
         socket.emit('inject', { element: 'main', html: html })
       })
     }
@@ -21,17 +22,21 @@ var markdownRoute = {
   path: '/markdown/editor',
   name: 'markdown-editor-page',    
   handler: function (url, socket) {      
-    fs.readFile(__dirname + '/markdown-page.html', 'utf8', function (err, sourceData) {      
+    fs.readFile(__dirname + '/polich-chain/markdown-page.html', 'utf8', function (err, sourceData) {      
       socket.emit('inject', { element: 'main', html: sourceData })
     })  
   }
 }
 
-routeCollection.push(mainPageRoute)
+routeCollection.push(homePageRoute)
 routeCollection.push(markdownRoute)
 
 for(i=0; i<ipfsRoutes.routes.length; i++) {
     routeCollection.push(ipfsRoutes.routes[i])
+}
+
+for(i=0; i<qualityReportRoutes.routes.length; i++) {
+  routeCollection.push(qualityReportRoutes.routes[i])
 }
 
 module.exports = {

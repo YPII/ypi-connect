@@ -8,6 +8,8 @@ var router = require('./core/router')
 var barcodeScan = require('./core/barcode/barcode-scan')
 barcodeScan.init('COM4', io)
 
+console.log(process.env.TEST_VARIABLE)
+
 io.on('connection', function (socket) {      
   var route = router.getRoute('/')    
   route.handler('/', io)
