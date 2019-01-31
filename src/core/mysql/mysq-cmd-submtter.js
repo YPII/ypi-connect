@@ -3,7 +3,6 @@ var mysql = require('mysql')
 var path = require('path')
 
 var mysqlConfig = require(path.join(__dirname, 'mysql-config'))
-var camelCase = require(path.join(__dirname, 'camel-case'))
 
 module.exports.submit = (sql, callback) => {
 
@@ -22,7 +21,7 @@ module.exports.submit = (sql, callback) => {
       // the field packets for the rows to follow
     })
     .on('result', function(row) {
-      rows.push(Object.assign({}, camelCase.toLower(row)))
+      rows.push(Object.assign({}, row))
     })
     .on('end', function() {
       if(error) return callback(error)

@@ -1,1 +1,28 @@
-<p><h1>{{value}}</h1></p>
+<table class="table is-responsive">
+  <thead>
+      <tr>
+        <th>Final Year</th>
+        <th>Final Month</th>
+        <th>Collection Hours</th>
+        <th>Order Hours</th>
+        <th>Accession Hours</th>
+        <th>Collection Days</th>
+        <th>Order Days</th>
+        <th>Accession Days</th>
+      </tr>
+    </thead>
+  <tbody>
+    {{#each this}}
+      <tr>
+        <td>{{'Final Year'}}</td>
+        <td>{{'Final Month'}}</td>  
+        <td>{{'Collection Hours'}}</td>  
+        <td>{{'Order Hours'}}</td>  
+        <td>{{'Accession Hours'}}</td>  
+        <td>{{'Collection Days'}}</td>  
+        <td>{{'Order Days'}}</td>  
+        <td>{{'Accession Days'}}</td>  
+      </tr>      
+{{/each}}
+  </tbody>
+</table>

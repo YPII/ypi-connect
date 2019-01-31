@@ -18,11 +18,10 @@ var qualityReportsRoute = {
 var molecularTATRoute = {
   path: '/quality-reports/molecular-tat',    
   handler: function (url, socket) {      
-    var hbsPath = __dirname + '\\molecular-tat.hbs'  
-    molecularTAT.getData(function (err, result) {      
-      templateEngine.getHTML(hbsPath, molecularTAT.data, function (err, html) {         
-        socket.emit('inject', { element: 'main', html: html })
-      })      
+    var hbsPath = __dirname + '\\molecular-tat.hbs'      
+    templateEngine.getHTML(hbsPath, molecularTAT.data, function (err, html) {         
+      socket.emit('inject', { element: 'main', html: html })    
+      socket.emit('attachQuickView', null)    
     })           
   }
 }
