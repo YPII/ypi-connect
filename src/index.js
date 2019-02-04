@@ -1,20 +1,8 @@
-var _ = require('underscore')
-
 var httpServer = require('./http-server')
-var io = require('socket.io')(httpServer.http)
+var homePage = require('./home-page')
+var componentRoute = require('./component-route')
+var qualityReports = require('./core/quality-reports/home-page')
 
-var router = require('./core/router')
-
-var barcodeScan = require('./core/barcode/barcode-scan')
-barcodeScan.init('COM4', io)
-
-io.on('connection', function (socket) {        
-  socket.on('request', function (message) {      
-    var requestRoute = router.getRoute(message.url)    
-    if(requestRoute != null) {
-      requestRoute.handler(message.url, io)    
-    } else {
-      console.log('Route not found for url: ' + message.url)
-    }    
-  })  
-})
+httpServer.routeCollection.push(homePage.route)
+httpServer.routeCollection.push(componentRoute.route)
+httpServer.routeCollection.push(qualityReports.route)

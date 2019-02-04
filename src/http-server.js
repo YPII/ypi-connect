@@ -2,55 +2,32 @@ const http = require('http').createServer(httpServerHandler)
 const url = require('url')
 const fs = require('fs')
 const path = require('path')
+const async = require('async')
 
 const port = 3000
 console.log(`HTTP Server is listening on port ${port}`)
 http.listen(parseInt(port))
 
-function httpServerHandler (req, res) {
-  console.log(`${req.method} ${req.url}`)
+var routeCollection = []
 
-  const parsedUrl = url.parse(req.url)
-  let pathname = `.${parsedUrl.pathname}`  
-  var ext = path.parse(pathname).ext
-
-  const map = {
-    '.ico': 'image/x-icon',
-    '.html': 'text/html',
-    '.js': 'text/javascript',
-    '.json': 'application/json',
-    '.css': 'text/css',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.wav': 'audio/wav',
-    '.mp3': 'audio/mpeg',
-    '.svg': 'image/svg+xml',
-    '.pdf': 'application/pdf',
-    '.doc': 'application/msword'
-  }
-
-  fs.exists(pathname, function (exist) {
-    if(!exist) {  
-      res.statusCode = 404
-      res.end(`File ${pathname} not found!`)
-      return
-    }
-
-    if (fs.statSync(pathname).isDirectory()) {
-      ext = '.html'
-      pathname += '/src/index' + ext      
-    }      
-
-    fs.readFile(pathname, function(err, data){
-      if(err){
-        res.statusCode = 500
-        res.end(`Error getting the file: ${err}.`)
-      } else {                
-        res.setHeader('Content-type', map[ext] || 'text/plain' )
-        res.end(data)
+function httpServerHandler (req, res) {  
+  async.eachSeries(routeCollection, function(route, callback) {  
+    route.routeHandler(req, res, function (err, handled) {
+      if(handled) {
+        var broke = new Error('broke')
+        callback(broke)
+      } else {
+        callback()
       }
     })
+  }, function (err) {
+    if(!err) {
+      res.statusCode = 500
+      res.end(`Path not found: ${req.url}.`)
+    }
   })
 }
 
-module.exports = { http }
+module.exports = {
+  routeCollection: routeCollection   
+}

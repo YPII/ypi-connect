@@ -1,0 +1,96 @@
+<script src="/socket.io/socket.io.js"></script>    
+<script src="/src/core/socket-client.js"></script>
+<script src="/src/core/html-injector.js"></script>  
+
+
+var parsedUrl = url.parse(req.url)  
+
+var _ = require('underscore')
+
+var httpServer = require('./http-server')
+var io = require('socket.io')(httpServer.http)
+
+var router = require('./core/router')
+
+var barcodeScan = require('./core/barcode/barcode-scan')
+barcodeScan.init('COM4', io)
+
+io.on('connection', function (socket) {        
+  socket.on('request', function (message) {      
+    var requestRoute = router.getRoute(message.url)    
+    if(requestRoute != null) {
+      requestRoute.handler(message.url, io)    
+    } else {
+      console.log('Route not found for url: ' + message.url)
+    }    
+  })  
+})
+
+
+console.log(`${req.method} ${req.url}`)
+
+  const parsedUrl = url.parse(req.url)
+  let pathname = `.${parsedUrl.pathname}`  
+  var ext = path.parse(pathname).ext
+
+  const map = {
+    '.ico': 'image/x-icon',
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.json': 'application/json',
+    '.css': 'text/css',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.wav': 'audio/wav',
+    '.mp3': 'audio/mpeg',
+    '.svg': 'image/svg+xml',
+    '.pdf': 'application/pdf',
+    '.doc': 'application/msword'
+  }
+
+  
+
+  fs.exists(pathname, function (exist) {    
+
+    console.log(`Path Name: ${pathname}`)    
+
+    if(pathname == './') {
+      var indexPath = path.join(__dirname, 'index.html')     
+      fs.readFile(indexPath, function(err, data){
+        if(err){
+          res.statusCode = 500
+          res.end(`Error getting the file: ${err}.`)
+        } else {                
+          res.setHeader('Content-type', map['.html'])
+          res.end(data)
+        }
+      })
+    } else if(pathname == './css/bulma.css') {       
+      var bulmacssPath = path.join(__dirname, '../node_modules/bulma/css/bulma.css')     
+      fs.readFile(bulmacssPath, function(err, data){
+        if(err){
+          res.statusCode = 500
+          res.end(`Error getting the file: ${err}.`)
+        } else {                
+          res.setHeader('Content-type', map['.css'])
+          res.end(data)
+        }
+      })
+    } else if(pathname == './css/bulma-quickview.min.css') {
+      var bulmacssPath = path.join(__dirname, '../node_modules/bulma-extensions/bulma-quickview/dist/css/bulma-quickview.min.css')     
+      fs.readFile(bulmacssPath, function(err, data){
+        if(err){
+          res.statusCode = 500
+          res.end(`Error getting the file: ${err}.`)
+        } else {                
+          res.setHeader('Content-type', map['.css'])
+          res.end(data)
+        }
+      })
+    } else {
+      console.log(`File ${pathname} not found!`)
+      res.statusCode = 404
+      res.end(`File ${pathname} not found!`)
+      return
+    }    
+  })
