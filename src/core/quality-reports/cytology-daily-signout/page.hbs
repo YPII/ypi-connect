@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <link rel="shortcut icon" type="image/png" href="/logo.png"/>
+    <title>YPI</title>
+    <link rel="stylesheet" href="/component/bulma.min.css">
+    <link rel="stylesheet" href="/component/bulma-calendar.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>    
+    <script src="/component/bulma-calendar.min.js"></script>
+    <script>
+      function submit() {
+        var reportStartDate = document.getElementById('reportStartDate').value
+        var reportEndDate = document.getElementById('reportEndDate').value        
+        var url = '/quality-reports/cytology-daily-signout/data?reportStartDate=' + reportStartDate + '&reportEndDate=' + reportEndDate
+        httpGetAsync(url, function (err, html) {
+          document.getElementById('reportData').innerHTML = html
+        })
+      }
+
+      function httpGetAsync(theUrl, callback)
+      {
+        var xmlHttp = new XMLHttpRequest()
+        xmlHttp.onreadystatechange = function() { 
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)               
+            callback(null, xmlHttp.responseText)
+        }
+        xmlHttp.open("GET", theUrl, true)
+        xmlHttp.send(null)
+      }
+    </script>
+  </head>
+  <body id="body">   
+    <section class="section">
+    <div class="container">
+      <h1 class="title">{{title}}</h1>
+      <input id="reportStartDate" type="date">
+      <input id="reportEndDate" type="date">
+      <a class="button" href="javascript:submit()">Submit</a>
+      <div id='reportData'></div>
+    </div>
+  </section>        
+  </body>
+</html>

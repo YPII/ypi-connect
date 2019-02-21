@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <link rel="shortcut icon" type="image/png" href="/logo.png"/>
+    <title>YPI</title>
+    <link rel="stylesheet" href="/component/bulma.min.css">
+    <link rel="stylesheet" href="/component/bulma-calendar.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>    
+    <script src="/component/bulma-calendar.min.js"></script>
+    <script>
+      function submit() {        
+        var url = '/ipfs/version'
+        httpGetAsync(url, function (err, html) {
+          document.getElementById('ipfsVersionData').innerHTML = html
+        })
+      } 
+
+      function ipfsFilesLs() {        
+        var url = '/ipfs/files/ls?arg=/'
+        httpGetAsync(url, function (err, html) {
+          document.getElementById('ipfsFilesLs').innerHTML = html
+        })
+      } 
+
+      function ipfsFilesRm() {        
+        var url = '/ipfs/files/rm?arg=/policy_chain&recursive=true&force=true'
+        httpGetAsync(url, function (err, html) {          
+          document.getElementById('ipfsFilesRm').innerHTML = html
+        })
+      } 
+
+      function create() {     
+        var url = '/ipfs/files/mkdir'   
+        httpGetAsync(url, function (err, html) {
+          document.getElementById('clearData').innerHTML = html
+        })
+      }     
+
+      function httpGetAsync(theUrl, callback)
+      {
+        var xmlHttp = new XMLHttpRequest()
+        xmlHttp.onreadystatechange = function() { 
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)               
+            callback(null, xmlHttp.responseText)
+        }
+        xmlHttp.open("GET", theUrl, true)
+        xmlHttp.send(null)
+      }
+    </script>
+  </head>
+  <body id="body">   
+    <section class="section">
+      <div class="container">
+        <h1 class="title">{{title}}</h1>          
+      </div>  
+      <div>        
+        <select id="year">
+          <option>2016</option>
+          <option>2017</option>
+          <option>2018</option>
+          <option>2019</option>
+        </select>                
+        <select id="month">
+          <option>January</option>
+          <option>February</option>
+          <option>March</option>
+          <option>April</option>
+          <option>May</option>
+          <option>June</option>
+          <option>July</option>
+          <option>August</option>
+          <option>September</option>
+          <option>October</option>
+          <option>November</option>
+          <option>December</option>              
+        </select>              
+        <a class="button" href="javascript:submit()">Submit</a>      
+        <a class="button" href="javascript:create()">Create</a>      
+        <a class="button" href="javascript:ipfsFilesLs()">files ls</a>      
+        <a class="button" href="javascript:ipfsFilesRm()">files rm</a>
+      </div>
+      <div id="ipfsFilesLs"></div>
+      <div id="ipfsFilesRm"></div>
+    </section>    
+    <script>
+      
+    </script>    
+  </body>
+</html>

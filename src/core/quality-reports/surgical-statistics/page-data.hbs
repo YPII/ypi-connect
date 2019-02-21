@@ -1,0 +1,30 @@
+<table class="table is-responsive">
+  <thead>
+      <tr>
+        <th>Pathologist</th>
+        <th>TAT</th>        
+        <th>Specimen Count</th>        
+        <th>Block Count</th>        
+        <th>Slide Count</th>        
+        <th>Case Count</th>        
+        <th>Bone Marrow Count</th>        
+        <th>FNA Count</th>        
+        <th>NON/GYN Count</th>        
+      </tr>
+    </thead>
+  <tbody>
+    {{#each this}}
+      <tr>
+        <td>{{'Pathologist'}}</td>
+        <td>{{'TAT'}}</td>          
+        <td>{{'Specimen Count'}}</td>          
+        <td>{{'Block Count'}}</td>          
+        <td>{{'Slide Count'}}</td>          
+        <td>{{'Case Count'}}</td>          
+        <td>{{'Bone Marrow Count'}}</td>          
+        <td>{{'FNA Count'}}</td>          
+        <td>{{'NON/GYN Count'}}</td>          
+      </tr>      
+    {{/each}}
+  </tbody>
+</table>

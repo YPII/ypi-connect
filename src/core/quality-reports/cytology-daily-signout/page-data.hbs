@@ -1,0 +1,32 @@
+<table class="table is-responsive is-size-7">
+  <thead>
+      <tr>
+        <th class="has-text-info">Accepted Date</th>
+        <th class="has-text-info">Mike Screend</th>
+        <th class="has-text-info">Mike Accessioned</th>
+        <th class="has-text-info">Julie Screened</th>
+        <th class="has-text-info">Julie Accessioned</th>        
+        <th class="has-text-info">Melissa Screened</th>
+        <th class="has-text-info">Melissa Accessioned</th>        
+        <th class="has-text-info">Keal Accessioned</th>        
+        <th class="has-text-info">Total Screened</th>        
+        <th class="has-text-info">Total Accessioned</th>        
+      </tr>
+    </thead>
+  <tbody>
+    {{#each this}}
+      <tr>
+        <td>{{'Accepted Date'}}</td>
+        <td>{{'Mike Screened'}}</td>
+        <td>{{'Mike Accessioned'}}</td>  
+        <td>{{'Julie Screened'}}</td>  
+        <td>{{'Julie Accessioned'}}</td>          
+        <td>{{'Melissa Screened'}}</td>  
+        <td>{{'Melissa Accessioned'}}</td>          
+        <td>{{'Kael Accessioned'}}</td>          
+        <td>{{'Total Screened'}}</td>          
+        <td>{{'Total Accessioned'}}</td>          
+      </tr>      
+{{/each}}
+  </tbody>
+</table>

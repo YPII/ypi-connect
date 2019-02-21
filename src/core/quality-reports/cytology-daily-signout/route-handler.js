@@ -6,7 +6,7 @@ var path = require('path')
 var fs = require('fs')
 var handlebars = require('handlebars')
 
-var pageData = { title: 'Molecular TAT' }
+var pageData = { title: 'Cytology Daily Signout' }
 
 function routeHandler (req, res, callback) {
   var hbsPath = path.join(__dirname, 'page.hbs')
@@ -26,7 +26,7 @@ function dataHandler (req, res, callback) {
   var reportEndDate = parsedUrl.query.reportEndDate
 
   var cn = mysql.createConnection(mysqlConfig)
-  var sql = 'call rpt_molecular_tat(?, ?)'
+  var sql = 'call rpt_cytology_daily_signout(?, ?)'
   cn.query(sql, [reportStartDate, reportEndDate], function (error, results, fields) {
     if (error) {
       console.log(error)
@@ -47,7 +47,7 @@ function dataHandler (req, res, callback) {
 
 module.exports = {
   register: function (routeMap) {
-    routeMap['/quality-reports/molecular-tat'] = routeHandler
-    routeMap['/quality-reports/molecular-tat/data'] = dataHandler
+    routeMap['/quality-reports/cytology-daily-signout'] = routeHandler
+    routeMap['/quality-reports/cytology-daily-signout/data'] = dataHandler
   }
 }
