@@ -1,6 +1,6 @@
 {
   "name": "ypi-connect",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "YPI Connect",
   "main": "src/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": {
     "name": "Sid Harder",
     "email": "sideharder@gmail.com"
-  },  
+  },
   "license": "MIT",
   "dependencies": {
     "async": "^2.6.2",
