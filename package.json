@@ -1,13 +1,20 @@
 {
   "name": "ypi-connect",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "YPI Connect",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YPII/ypi-connect.git"
+  },
+  "author": {
+    "name": "Sid Harder",
+    "email": "sideharder@gmail.com"
+  },  
+  "license": "MIT",
   "dependencies": {
     "async": "^2.6.2",
     "dateformat": "^3.0.3",
