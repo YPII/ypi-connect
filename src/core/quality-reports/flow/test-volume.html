@@ -1,0 +1,141 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <link rel="shortcut icon" type="image/png" href="/logo.png"/>
+    <title>YPI</title>
+    <link rel="stylesheet" href="/component/bulma.min.css">
+    <link rel="stylesheet" href="/component/bulma-calendar.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>    
+    <script src="/component/bulma-calendar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="/component/date-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+
+    <script id="report-template" type="text/x-handlebars-template">
+      <table class="table is-responsive is-striped is-narrow">
+        <thead>
+            <tr>
+              <th class="is-size-7">Test</th>
+              <th class="is-size-7">Jan</th>
+              <th class="is-size-7">Feb</th>
+              <th class="is-size-7">Mar</th>
+              <th class="is-size-7">Apr</th>
+              <th class="is-size-7">May</th>
+              <th class="is-size-7">Jun</th>
+              <th class="is-size-7">Jul</th>
+              <th class="is-size-7">Aug</th>
+              <th class="is-size-7">Sep</th>
+              <th class="is-size-7">Oct</th>
+              <th class="is-size-7">Nov</th>
+              <th class="is-size-7">Dec</th>
+              <th class="is-size-7">Total</th>
+            </tr>
+          </thead>
+        <tbody>
+          {{#each this}}
+            <tr>
+              <td class="is-size-7"><a href="javascript:drawChart({{TestId}})">{{Test}}</a></td>
+              <td class="has-text-right is-size-7">{{Jan}}</td>  
+              <td class="has-text-right is-size-7">{{Feb}}</td>  
+              <td class="has-text-right is-size-7">{{Mar}}</td>  
+              <td class="has-text-right is-size-7">{{Apr}}</td>  
+              <td class="has-text-right is-size-7">{{May}}</td>  
+              <td class="has-text-right is-size-7">{{Jun}}</td>  
+              <td class="has-text-right is-size-7">{{Jul}}</td>  
+              <td class="has-text-right is-size-7">{{Aug}}</td>  
+              <td class="has-text-right is-size-7">{{Sep}}</td>  
+              <td class="has-text-right is-size-7">{{Oct}}</td>  
+              <td class="has-text-right is-size-7">{{Nov}}</td>  
+              <td class="has-text-right is-size-7">{{Dec}}</td>          
+              <td class="has-text-right is-size-7">{{Total}}</td>
+            </tr>      
+          {{/each}}
+        </tbody>
+      </table>
+    </script>
+
+    <script>
+      var bulmaCalendars
+
+      var bulmaCalendarOptions = {
+        isRange: true,
+        clearButton: true,
+        labelFrom: 'Start Date',
+        labelTo: 'End Date'
+      }
+
+      document.addEventListener('DOMContentLoaded', function(event) {        
+        bulmaCalendars = bulmaCalendar.attach('[type="date"]', bulmaCalendarOptions)
+      })
+
+      function httpGetAsync(theUrl, callback)
+      {
+        var xmlHttp = new XMLHttpRequest()
+        xmlHttp.onreadystatechange = function() { 
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)               
+            callback(null, xmlHttp.responseText)
+        }
+        xmlHttp.open("GET", theUrl, true)
+        xmlHttp.send(null)
+      }
+
+      function setThisYear() {        
+        document.getElementById("reportYear").value = 2019
+      }
+
+      function setLastYear() {
+        document.getElementById('reportYear').value = 2018
+      }   
+
+      function drawChart(testId) {
+        var url = '/quality-reports/flow/test-volume/chart?testId=' + testId
+        httpGetAsync(url, function (err, resultJSON) {          
+          var resultObj = JSON.parse(resultJSON)          
+          document.getElementById('chartData').innerHTML = '<div class="column is-four-fifths"><canvas id="myChart"></canvas>'
+          var ctx = document.getElementById('myChart').getContext('2d')          
+          var chart = new Chart(ctx, resultObj)          
+        })          
+      }  
+
+      function handleReport() {
+        var source = document.getElementById("report-template").innerHTML
+        var template = Handlebars.compile(source)
+        var reportYear = document.getElementById('reportYear').value        
+        var url = '/quality-reports/flow/test-volume/data?reportYear=' + reportYear
+        httpGetAsync(url, function (err, resultJSON) {          
+          var resultObj = JSON.parse(resultJSON)
+          var html = template(resultObj)
+          document.getElementById('reportData').innerHTML = html
+        })        
+      }
+    </script>
+  </head>
+  <body id="body">   
+    <div class="columns">
+      <div class="column is-3">
+        <section class="section">
+          <aside class="menu">
+            <p class="menu-label">Report Year:</p>            
+            <input id="reportYear" type="text" class="input is-small"></input>                                    
+            <ul class="menu-list">
+              <li><a href="javascript:setThisYear()" class="is-size-7">This Year</a></li>
+              <li><a href="javascript:setLastYear()" class="is-size-7">Last Year</a></li>
+            </ul>            
+            <p class="menu-label">Options</p>
+            <ul class="menu-list">
+              <li><a href="javascript:handleReport()" class="is-size-7">Report</a></li>              
+            </ul>            
+          </aside>
+        </section>
+      </div>
+      <section class="section">
+        <div class="container">
+          <h1 class="title is-size-6">Flow Volume Report</h1>          
+          <div id='reportData'></div>
+          <div id='chartData'></div>
+        </div>
+      </section>          
+    </div>    
+  </body>
+</html>

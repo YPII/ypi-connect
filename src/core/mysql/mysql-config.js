@@ -3,5 +3,5 @@ module.exports = {
   user: process.env.AP_MYSQL_USER,
   password: process.env.AP_MYSQL_PASS,
   database: process.env.AP_MYSQL_DATABASE,
-  multipleStatements: true,
+  multipleStatements: true
 }

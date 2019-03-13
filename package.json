@@ -22,5 +22,8 @@
     "mysql": "^2.16.0",
     "request": "^2.88.0",
     "url-parse": "^1.4.4"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0"
   }
 }

@@ -1,0 +1,139 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <link rel="shortcut icon" type="image/png" href="/logo.png"/>
+    <title>YPI</title>
+    <link rel="stylesheet" href="/component/bulma.min.css">
+    <link rel="stylesheet" href="/component/bulma-calendar.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>    
+    <script src="/component/bulma-calendar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="/component/date-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+
+    <script id="report-template" type="text/x-handlebars-template">
+      <table class="table is-responsive is-striped is-narrow">
+        <thead>
+          <tr>
+            <th class="is-size-7">Pathologist</th>
+            <th class="is-size-7">TAT</th>        
+            <th class="is-size-7">Specimen Count</th>        
+            <th class="is-size-7">Block Count</th>        
+            <th class="is-size-7">Slide Count</th>        
+            <th class="is-size-7">Case Count</th>        
+            <th class="is-size-7">Bone Marrow Count</th>        
+            <th class="is-size-7">FNA Count</th>        
+            <th class="is-size-7">NON/GYN Count</th>        
+          </tr>
+        </thead>
+        <tbody>
+          {{#each this}}
+            <tr>
+              <td class="is-size-7">{{Pathologist}}</td>
+              <td class="has-text-right is-size-7">{{TAT}}</td>          
+              <td class="has-text-right is-size-7">{{[Specimen Count]}}</td>          
+              <td class="has-text-right is-size-7">{{[Block Count]}}</td>          
+              <td class="has-text-right is-size-7">{{[Slide Count]}}</td>          
+              <td class="has-text-right is-size-7">{{[Case Count]}}</td>          
+              <td class="has-text-right is-size-7">{{[Bone Marrow Count]}}</td>          
+              <td class="has-text-right is-size-7">{{[FNA Count]}}</td>          
+              <td class="has-text-right is-size-7">{{[NON/GYN Count]}}</td>          
+            </tr>     
+          {{/each}}
+        </tbody>
+      </table>
+    </script>
+
+    <script>
+      var bulmaCalendars
+
+      var bulmaCalendarOptions = {
+        isRange: true,
+        clearButton: true,
+        labelFrom: 'Start Date',
+        labelTo: 'End Date'
+      }
+
+      document.addEventListener('DOMContentLoaded', function(event) {        
+        bulmaCalendars = bulmaCalendar.attach('[type="date"]', bulmaCalendarOptions)
+      })
+
+      function httpGetAsync(theUrl, callback)
+      {
+        var xmlHttp = new XMLHttpRequest()
+        xmlHttp.onreadystatechange = function() { 
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)               
+            callback(null, xmlHttp.responseText)
+        }
+        xmlHttp.open("GET", theUrl, true)
+        xmlHttp.send(null)
+      }
+
+      function setDateRangeThisMonth() {        
+        document.getElementById("dateRange").value = getDateRangeThisMonth()
+      }
+
+      function setDateRangeLastMonth() {        
+        document.getElementById("dateRange").value = getDateRangeLastMonth()
+      }
+
+      function setDateRangeThisYear() {        
+        document.getElementById("dateRange").value = getDateRangeThisYear()
+      }
+
+      function setDateRangeLastYear() {
+        document.getElementById('dateRange').value = getDateRangeLastYear()
+      }        
+
+      function handleReport() {
+        var dateRange = parseDateRangeString(document.getElementById('dateRange').value)
+        var source = document.getElementById("report-template").innerHTML
+        var template = Handlebars.compile(source)        
+        var url = '/quality-reports/surgical/statistics/data?reportStartDate=' + dateRange.startDate + '&reportEndDate=' + dateRange.endDate
+        httpGetAsync(url, function (err, resultJSON) {          
+          var resultObj = JSON.parse(resultJSON)
+          var html = template(resultObj)
+          document.getElementById('reportData').innerHTML = html
+        })
+      }
+    </script>
+  </head>
+  <body id="body">   
+    <div>
+      <div class="columns">
+        <div class="column is-3">
+          <section class="section">
+            <aside class="menu">
+              <p class="menu-label">Date Range:</p>            
+                <input id="dateRange" type="date" class="input is-small"></input>            
+              <p class="menu-label">Month</p>
+              <ul class="menu-list">
+                <li><a href="javascript:setDateRangeThisMonth()" class="is-size-7">This Month</a></li>
+                <li><a href="javascript:setDateRangeLastMonth()" class="is-size-7">Last Month</a></li>
+              </ul>
+              <p class="menu-label">Year</p>
+              <ul class="menu-list">
+                <li><a href="javascript:setDateRangeThisYear()" class="is-size-7">This Year</a></li>
+                <li><a href="javascript:setDateRangeLastYear()" class="is-size-7">Last Year</a></li>
+              </ul>
+              <p class="menu-label">Options</p>
+              <ul class="menu-list">                
+                <li><a href="javascript:handleReport()" class="is-size-7">Report</a></li>                
+              </ul>
+            </aside>
+          </section>
+        </div>
+        <div class="column is-10">        
+          <section class="section">
+            <div class="container">
+              <h1 class="title is-size-6">Surgical Statistics Report</h1>          
+              <div id='reportData'></div>
+              <div id='chartData'></div>
+            </div>
+          </section>         
+        </div>      
+      </div>                  
+    </div>    
+  </body>
+</html>

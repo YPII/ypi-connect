@@ -1,10 +1,10 @@
 var httpServer = require('./http-server')
 var homePage = require('./home-page')
-var componentRoute = require('./component-route')
-var qualityReports = require('./core/quality-reports/home-page')
+var commonRoute = require('./common-route')
+var qualityReports = require('./core/quality-reports/quality-reports')
 var fileBrowser = require('./core/policy-chain/file-browser')
 
 httpServer.routeCollection.push(homePage.route)
-httpServer.routeCollection.push(componentRoute.route)
+httpServer.routeCollection.push(commonRoute.route)
 httpServer.routeCollection.push(qualityReports.route)
 httpServer.routeCollection.push(fileBrowser.route)
